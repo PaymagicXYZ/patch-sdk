@@ -1,4 +1,4 @@
-import {
+import type {
   OAuthCredentials,
   UserId,
   Address,
@@ -6,7 +6,7 @@ import {
   SignData,
   HexString,
 } from "./types";
-
+export type * from "./types";
 export default class Client {
   private baseUrl = "https://paymagicapi.com/v1";
   private credentials: OAuthCredentials;

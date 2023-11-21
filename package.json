@@ -8,7 +8,7 @@
     "typescript": "^5.0.0"
   },
   "description": "SDK for Patch Wallet",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./dist/src/index.js",
   "module": "./dist/src/index.js",
   "exports": {
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "test": "bun test",
-    "build": "rm -rf ./dist && bun run ./build.ts"
+    "build": "rm -rf ./dist && bun build ./src/index.ts --outdir=./dist/src --target=node --format=esm --minify --sourcemap=external && bun tsc --emitDeclarationOnly"
   },
   "repository": {
     "type": "git",

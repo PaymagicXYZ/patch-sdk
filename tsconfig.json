@@ -6,7 +6,10 @@
     "moduleResolution": "bundler",
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "src",
     "composite": true,
     "strict": true,
     "downlevelIteration": true,
@@ -18,5 +21,7 @@
     "types": [
       "bun-types" // add Bun global
     ]
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests", "examples"]
 }
