@@ -8,14 +8,15 @@
     "typescript": "^5.0.0"
   },
   "description": "SDK for Patch Wallet",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "./dist/src/index.js",
   "module": "./dist/src/index.js",
   "exports": {
     ".": {
       "import": "./dist/src/index.js",
       "require": "./dist/src/index.js",
-      "default": "./dist/src/index.js"
+      "default": "./dist/src/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "types": "./dist/index.d.ts",
