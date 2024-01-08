@@ -28,6 +28,7 @@ export default class Client {
         client_id: this.credentials.clientId,
         client_secret: this.credentials.clientSecret,
       }),
+      cache: "no-store",
     })
       .then((res) => res.json())
       .then((data) => data.access_token);
