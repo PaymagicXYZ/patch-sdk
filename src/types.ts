@@ -29,26 +29,29 @@ export const socialNetworks = [
 export type SocialNetwork = (typeof socialNetworks)[number];
 export type UserId = `${SocialNetwork | "test"}:${string}`;
 
-export interface TxData {
+interface UserIdData {
   userId: UserId;
+  auth: "" | string;
+}
+
+export type TxData = UserIdData & {
   chain: Chain;
   to: Address[];
   value: String[];
   data: HexString[];
   delegatecall: 0 | 1;
-  auth: "" | string;
-}
+};
 
-export interface SignHashData {
-  userId: UserId;
+export type SignHashData = UserIdData & {
   hash: HexString;
-}
-export interface SignStringData {
-  userId: UserId;
+};
+
+export type SignStringData = UserIdData & {
   string: string;
-}
-export interface SignTypedData {
-  userId: UserId;
+};
+
+export type SignTypedData = UserIdData & {
   typedData: any;
-}
+};
+
 export type SignData = SignHashData | SignStringData | SignTypedData;
