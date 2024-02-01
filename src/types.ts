@@ -25,6 +25,7 @@ export const socialNetworks = [
   "github",
   "passphrase",
   "discord",
+  "farcaster"
 ] as const;
 export type SocialNetwork = (typeof socialNetworks)[number];
 export type UserId = `${SocialNetwork | "test"}:${string}`;
