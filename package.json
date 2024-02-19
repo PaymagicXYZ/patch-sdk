@@ -2,7 +2,8 @@
   "name": "@patchwallet/patch-sdk",
   "type": "module",
   "devDependencies": {
-    "bun-types": "latest"
+    "@types/bun": "^1.0.6",
+    "bun-types": "^1.0.27"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
