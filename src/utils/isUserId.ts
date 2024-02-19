@@ -6,6 +6,7 @@ export function isUserId(value: any): value is UserId {
   const validPrefixes = socialNetworks;
   return (
     validPrefixes.includes(prefix as SocialNetwork) &&
-    rest.join(":").length == 1
+    typeof rest.join(":") === "string" &&
+    rest.join(":").length > 0
   );
 }
