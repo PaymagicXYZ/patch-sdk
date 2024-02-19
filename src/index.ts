@@ -102,6 +102,9 @@ export default class Client {
     };
   }
 
+  async resolve(userIds: UserId): Promise<Address>;
+  async resolve(userIds: UserId[]): Promise<Address[]>;
+
   async resolve(userIds: UserId | UserId[]): Promise<Address | Address[]> {
     const resolvedUser = await fetch(`${this.baseUrl}/resolver`, {
       method: "POST",
