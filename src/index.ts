@@ -7,6 +7,9 @@ import type {
   HexString,
 } from "./types";
 export type * from "./types";
+interface ExtendedRequestInit extends RequestInit {
+  cache?: "no-store" | "force-cache";
+}
 export default class Client {
   private baseUrl = "https://paymagicapi.com/v1";
   private credentials: OAuthCredentials;
@@ -29,8 +32,8 @@ export default class Client {
         client_secret: this.credentials.clientSecret,
       }),
       cache: "no-store",
-    })
-      .then((res) => res.json())
+    } as ExtendedRequestInit)
+      .then((res) => res.json() as Promise<{ access_token: string }>)
       .then((data) => data.access_token);
     this.token = response;
     this.tokenExpiry = new Date(new Date().getTime() + 30000);
@@ -57,7 +60,7 @@ export default class Client {
       return this.tx(data);
     }
     if (response.status === 200) {
-      const resData = await response.json();
+      const resData = (await response.json()) as { txHash: HexString };
       return { txHash: resData.txHash };
     }
     return {
@@ -91,7 +94,11 @@ export default class Client {
       return this.sign(data);
     }
     if (response.status === 200) {
-      const data = await response.json();
+      const data = (await response.json()) as {
+        hash: `0x${string}`;
+        signature: `0x${string}`;
+        type: "string" | "hash" | "typedData";
+      };
       return data;
     }
     return {
@@ -110,11 +117,13 @@ export default class Client {
       method: "POST",
       body: JSON.stringify({ userIds: [userIds].toString() }),
     })
-      .then((res) => res.json())
+      .then(
+        (res) => res.json() as Promise<{ users: { accountAddress: Address }[] }>
+      )
       .then((data) => data.users)
       .catch((err) => {
         console.error(err);
-        return "";
+        return [];
       });
     const addresses = resolvedUser.map(
       (u: { accountAddress: Address }) => u.accountAddress

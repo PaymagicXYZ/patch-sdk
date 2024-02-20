@@ -36,7 +36,8 @@
   },
   "scripts": {
     "test": "bun test",
-    "build": "rm -rf ./dist && rm ./tsconfig.tsbuildinfo && bun build ./src/index.ts --outdir=./dist/src --target=node --format=esm --minify --sourcemap=external && bun build ./src/utils/index.ts --outdir=./dist/src/utils --target=node --format=esm --minify --sourcemap=external && bun tsc --emitDeclarationOnly"
+    "build": "rm -rf ./dist && rm ./tsconfig.tsbuildinfo && bun build ./src/index.ts --outdir=./dist/src --target=node --format=esm --minify --sourcemap=external && bun build ./src/utils/index.ts --outdir=./dist/src/utils --target=node --format=esm --minify --sourcemap=external && bun tsc --emitDeclarationOnly",
+    "deploy": "bun build ./src/index.ts --outdir=./dist/src --target=node --format=esm --minify --sourcemap=external && bun build ./src/utils/index.ts --outdir=./dist/src/utils --target=node --format=esm --minify --sourcemap=external && bun tsc --emitDeclarationOnly && npm publish --access public"
   },
   "repository": {
     "type": "git",
