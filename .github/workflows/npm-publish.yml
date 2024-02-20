@@ -33,6 +33,6 @@ jobs:
         with:
           bun-version: latest
       - run: bun install
-      - run: bun run publish
+      - run: bun run deploy
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
