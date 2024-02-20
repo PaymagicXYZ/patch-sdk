@@ -5,6 +5,8 @@ export interface ChainDetail {
     AlchemyChainNetwork: string;
     CovalentChainName: string;
     shortName: Chain;
+    explorer: string;
+    defaultMoonPayCurrency?: string;
   };
 }
 
@@ -18,41 +20,53 @@ export const ChainIdForChainName: ChainDetail = {
     AlchemyChainNetwork: "polygon-mainnet",
     CovalentChainName: "matic-mainnet",
     shortName: "matic",
+    explorer: "https://polygonscan.com/",
+    defaultMoonPayCurrency: "USDC_POLYGON",
   },
   10: {
     AlchemyChainNetwork: "opt-mainnet",
     CovalentChainName: "optimism-mainnet",
     shortName: "oeth",
+    explorer: "https://optimistic.etherscan.io/",
+    defaultMoonPayCurrency: "USDC_OPTIMISM",
   },
   42161: {
     AlchemyChainNetwork: "arb-mainnet",
     CovalentChainName: "arbitrum-mainnet",
     shortName: "arb1",
+    explorer: "https://explorer.offchainlabs.com/",
+    defaultMoonPayCurrency: "USDC_ARBITRUM",
   },
   59144: {
     AlchemyChainNetwork: "",
     CovalentChainName: "linea-mainnet",
     shortName: "linea",
+    explorer: "https://lineascan.build",
   },
   8453: {
     AlchemyChainNetwork: "base-mainnet",
     CovalentChainName: "base-mainnet",
     shortName: "base",
+    explorer: "https://basescan.org",
+    defaultMoonPayCurrency: "USDC_BASE",
   },
   100: {
     AlchemyChainNetwork: "",
     CovalentChainName: "gnosis-mainnet",
     shortName: "gno",
+    explorer: "https://gnosisscan.io",
   },
   56: {
     AlchemyChainNetwork: "",
     CovalentChainName: "bsc-mainnet",
     shortName: "bnb",
+    explorer: "https://bscscan.com",
   },
   80001: {
     AlchemyChainNetwork: "polygon-mumbai",
     CovalentChainName: "matic-mumbai",
     shortName: "maticmum",
+    explorer: "https://mumbai.polygonscan.com",
   },
 };
 export const supportedNetworks = Object.values(ChainIdForChainName).map(
@@ -100,3 +114,17 @@ export const getNetworkfromShortName = (shortName: ShortName): Networks => {
 
 export const isSupportedChain = (chain: ShortName): boolean =>
   supportedShortNames.includes(chain);
+
+export const getExplorerFromShortName = (shortName: ShortName): string => {
+  const explorer = Object.keys(ChainIdForChainName).find(
+    (key) => ChainIdForChainName[Number(key)].shortName === shortName
+  );
+  return ChainIdForChainName[Number(explorer)].explorer;
+};
+
+export const getDefaultMoonPayCurrency = (shortName: ShortName): string => {
+  const currency = Object.keys(ChainIdForChainName).find(
+    (key) => ChainIdForChainName[Number(key)].shortName === shortName
+  );
+  return ChainIdForChainName[Number(currency)].defaultMoonPayCurrency || "ETH";
+};
