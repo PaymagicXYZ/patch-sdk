@@ -3,7 +3,7 @@ export type HexString = `0x${string}`;
 
 export const supportedChains = [
   "matic",
-  "oeth",
+  // "oeth",
   "arb1",
   "linea",
   "base",
@@ -25,7 +25,7 @@ export const socialNetworks = [
   "github",
   "passphrase",
   "discord",
-  "farcaster"
+  "farcaster",
 ] as const;
 export type SocialNetwork = (typeof socialNetworks)[number];
 export type UserId = `${SocialNetwork | "test"}:${string}`;
