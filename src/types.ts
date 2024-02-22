@@ -3,7 +3,7 @@ export type HexString = `0x${string}`;
 
 export const supportedChains = [
   "matic",
-  // "oeth",
+  "oeth",
   "arb1",
   "linea",
   "base",

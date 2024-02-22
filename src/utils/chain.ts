@@ -23,13 +23,13 @@ export const ChainIdForChainName: ChainDetail = {
     explorer: "https://polygonscan.com/",
     defaultMoonPayCurrency: "USDC_POLYGON",
   },
-  // 10: {
-  //   AlchemyChainNetwork: "opt-mainnet",
-  //   CovalentChainName: "optimism-mainnet",
-  //   shortName: "oeth",
-  //   explorer: "https://optimistic.etherscan.io/",
-  //   defaultMoonPayCurrency: "USDC_OPTIMISM",
-  // },
+  10: {
+    AlchemyChainNetwork: "opt-mainnet",
+    CovalentChainName: "optimism-mainnet",
+    shortName: "oeth",
+    explorer: "https://optimistic.etherscan.io/",
+    defaultMoonPayCurrency: "USDC_OPTIMISM",
+  },
   42161: {
     AlchemyChainNetwork: "arb-mainnet",
     CovalentChainName: "arbitrum-mainnet",
