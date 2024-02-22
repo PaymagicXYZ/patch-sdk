@@ -60,12 +60,61 @@ export default class Client {
       return this.tx(data);
     }
     if (response.status === 200) {
-      const resData = (await response.json()) as { txHash: HexString };
-      return { txHash: resData.txHash };
+      const resData = (await response.json()) as {
+        txHash: HexString;
+        userOpHash: HexString;
+      };
+      if (!!resData.txHash) {
+        return { txHash: resData.txHash };
+      } else {
+        const txStatus = await this.txStatus(resData.userOpHash);
+        if ("error" in txStatus) {
+          return txStatus;
+        }
+        return { txHash: txStatus.txHash };
+      }
+    }
+    return {
+      error: `Transaction failed: ${String(response.status)} ${String(
+        response.statusText
+      )}, ${await response.text()}`,
+    };
+  }
+
+  async txStatus(
+    userOpHash: HexString,
+    retryCount: number = 0
+  ): Promise<{ txHash: HexString } | { error: string }> {
+    await this.refreshTokenIfNeeded();
+    if (retryCount > 3) {
+      return {
+        error: "Transaction stuck in pending state for too long, it may fail",
+      };
+    }
+    const response = await fetch(`${this.baseUrl}/kernel/txStatus`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+      body: JSON.stringify({ userOpHash }),
+    });
+    if (response.status === 403) {
+      await this.authenticate();
+      return this.txStatus(userOpHash);
+    }
+    if (response.status === 200) {
+      const data = (await response.json()) as {
+        txHash: HexString;
+        userOpHash: HexString;
+      };
+      if (!!data.txHash) {
+        return { txHash: data.txHash };
+      } else {
+        return await this.txStatus(data.userOpHash, retryCount + 1);
+      }
     }
     return {
       error:
-        "Transaction failed:" +
+        "Lookup failed:" +
         String(response.status) +
         String(response.statusText),
     };
