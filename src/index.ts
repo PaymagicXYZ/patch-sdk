@@ -57,7 +57,7 @@ export default class Client {
     });
     if (response.status === 403) {
       await this.authenticate();
-      return this.tx(data);
+      return await this.tx(data);
     }
     if (response.status === 200) {
       const resData = (await response.json()) as {
@@ -99,7 +99,7 @@ export default class Client {
     });
     if (response.status === 403) {
       await this.authenticate();
-      return this.txStatus(userOpHash);
+      return await this.txStatus(userOpHash);
     }
     if (response.status === 200) {
       const data = (await response.json()) as {
@@ -140,7 +140,7 @@ export default class Client {
 
     if (response.status === 403) {
       await this.authenticate();
-      return this.sign(data);
+      return await this.sign(data);
     }
     if (response.status === 200) {
       const data = (await response.json()) as {
