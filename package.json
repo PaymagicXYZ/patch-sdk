@@ -2,14 +2,14 @@
   "name": "@patchwallet/patch-sdk",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "^1.0.6",
-    "bun-types": "^1.0.27"
+    "@types/bun": "^1.0.8",
+    "bun-types": "^1.0.30"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "description": "SDK for Patch Wallet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "./dist/src/index.js",
   "module": "./dist/src/index.js",
   "exports": {
@@ -32,7 +32,7 @@
     "src"
   ],
   "dependencies": {
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "scripts": {
     "test": "bun test",
