@@ -2,6 +2,7 @@ export type Address = `0x${string}`;
 export type HexString = `0x${string}`;
 
 export const supportedChains = [
+  "eth",
   "matic",
   "oeth",
   "arb1",

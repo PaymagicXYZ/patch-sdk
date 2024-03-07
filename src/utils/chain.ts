@@ -11,11 +11,13 @@ export interface ChainDetail {
 }
 
 export const ChainIdForChainName: ChainDetail = {
-  // 1: {
-  //   AlchemyChainNetwork: "eth-mainnet",
-  //   CovalentChainName: "eth-mainnet",
-  //   shortName: "eth",
-  // },
+  1: {
+    AlchemyChainNetwork: "eth-mainnet",
+    CovalentChainName: "eth-mainnet",
+    shortName: "eth",
+    explorer: "https://etherscan.io/",
+    defaultMoonPayCurrency: "ETH",
+  },
   137: {
     AlchemyChainNetwork: "polygon-mainnet",
     CovalentChainName: "matic-mainnet",
