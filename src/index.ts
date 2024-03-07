@@ -1,123 +1,41 @@
-import type {
-  OAuthCredentials,
-  UserId,
-  Address,
-  TxData,
-  SignData,
-  HexString,
-} from "./types";
+import type { UserId, Address, TxData, SignData, HexString } from "./types";
 export type * from "./types";
-interface ExtendedRequestInit extends RequestInit {
-  cache?: "no-store" | "force-cache";
-}
-export default class Client {
-  private baseUrl = "https://paymagicapi.com/v1";
-  private credentials: OAuthCredentials;
-  private token?: string;
-  private tokenExpiry?: Date;
-  private appProvider?: string;
+import AuthenticatedClient from "./authenticatedClient";
 
-  constructor(credentials: OAuthCredentials) {
-    this.credentials = credentials;
-  }
-
-  async authenticate(): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/auth`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        client_id: this.credentials.clientId,
-        client_secret: this.credentials.clientSecret,
-      }),
-      cache: "no-store",
-    } as ExtendedRequestInit)
-      .then((res) => res.json() as Promise<{ access_token: string }>)
-      .then((data) => data.access_token);
-    this.token = response;
-    this.tokenExpiry = new Date(new Date().getTime() + 30000);
-  }
-
-  private async refreshTokenIfNeeded(): Promise<void> {
-    if (!this.token || !this.tokenExpiry || new Date() >= this.tokenExpiry) {
-      await this.authenticate();
-    }
-  }
-
+export default class Client extends AuthenticatedClient {
   async tx(data: TxData): Promise<{ error: string } | { txHash: HexString }> {
-    await this.refreshTokenIfNeeded();
-    const response = await fetch(`${this.baseUrl}/kernel/tx`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (response.status === 403) {
-      await this.authenticate();
-      return await this.tx(data);
-    }
-    if (response.status === 200) {
-      const resData = (await response.json()) as {
-        txHash: HexString;
-        userOpHash: HexString;
-      };
-      if (!!resData.txHash) {
-        return { txHash: resData.txHash };
-      } else {
-        const txStatus = await this.txStatus(resData.userOpHash);
-        if ("error" in txStatus) {
-          return txStatus;
-        }
-        return { txHash: txStatus.txHash };
+    const response = await this.fetch("/kernel/tx", "POST", data);
+
+    if (!!response.txHash) {
+      return { txHash: response.txHash };
+    } else {
+      const txStatus = await this.txStatus(response.userOpHash);
+      if ("error" in txStatus) {
+        return txStatus;
       }
+      return { txHash: txStatus.txHash };
     }
-    return {
-      error: `Transaction failed: ${String(response.status)} ${String(
-        response.statusText
-      )}, ${await response.text()}`,
-    };
   }
 
   async txStatus(
     userOpHash: HexString,
     retryCount: number = 0
   ): Promise<{ txHash: HexString } | { error: string }> {
-    await this.refreshTokenIfNeeded();
     if (retryCount > 3) {
       return {
         error: "Transaction stuck in pending state for too long, it may fail",
       };
     }
-    const response = await fetch(`${this.baseUrl}/kernel/txStatus`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-      },
-      body: JSON.stringify({ userOpHash }),
+
+    const response = await this.fetch("/kernel/txStatus", "POST", {
+      userOpHash,
     });
-    if (response.status === 403) {
-      await this.authenticate();
-      return await this.txStatus(userOpHash);
+
+    if (!!response.txHash) {
+      return { txHash: response.txHash };
+    } else {
+      return await this.txStatus(response.userOpHash, retryCount + 1);
     }
-    if (response.status === 200) {
-      const data = (await response.json()) as {
-        txHash: HexString;
-        userOpHash: HexString;
-      };
-      if (!!data.txHash) {
-        return { txHash: data.txHash };
-      } else {
-        return await this.txStatus(data.userOpHash, retryCount + 1);
-      }
-    }
-    return {
-      error:
-        "Lookup failed:" +
-        String(response.status) +
-        String(response.statusText),
-    };
   }
 
   async sign(data: SignData): Promise<
@@ -128,47 +46,21 @@ export default class Client {
       }
     | { error: string }
   > {
-    await this.refreshTokenIfNeeded();
-    const response = await fetch(`${this.baseUrl}/kernel/sign`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (response.status === 403) {
-      await this.authenticate();
-      return await this.sign(data);
-    }
-    if (response.status === 200) {
-      const data = (await response.json()) as {
-        hash: `0x${string}`;
-        signature: `0x${string}`;
-        type: "string" | "hash" | "typedData";
-      };
-      return data;
-    }
-    return {
-      error:
-        "Transaction failed:" +
-        String(response.status) +
-        String(response.statusText),
-    };
+    const response = await this.fetch("/kernel/sign", "POST", data);
+    return response;
   }
 
   async resolve(userIds: UserId): Promise<Address>;
   async resolve(userIds: UserId[]): Promise<Address[]>;
 
   async resolve(userIds: UserId | UserId[]): Promise<Address | Address[]> {
-    const resolvedUser = await fetch(`${this.baseUrl}/resolver`, {
-      method: "POST",
-      body: JSON.stringify({ userIds: [userIds].toString() }),
-    })
-      .then(
-        (res) => res.json() as Promise<{ users: { accountAddress: Address }[] }>
-      )
+    const resolvedUser = await this.fetch(
+      "/resolver",
+      "POST",
+      { userIds: [userIds].toString() },
+      undefined,
+      false
+    )
       .then((data) => data.users)
       .catch((err) => {
         console.error(err);
