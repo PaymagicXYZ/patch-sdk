@@ -64,11 +64,17 @@ export const ChainIdForChainName: ChainDetail = {
     shortName: "bnb",
     explorer: "https://bscscan.com",
   },
-  80001: {
-    AlchemyChainNetwork: "polygon-mumbai",
-    CovalentChainName: "matic-mumbai",
-    shortName: "maticmum",
-    explorer: "https://mumbai.polygonscan.com",
+  80002: {
+    AlchemyChainNetwork: "polygon-amoy",
+    CovalentChainName: "",
+    shortName: "polygonamoy",
+    explorer: "https://amoy.polygonscan.com",
+  },
+  666666666: {
+    AlchemyChainNetwork: "",
+    CovalentChainName: "",
+    shortName: "degen",
+    explorer: "https://explorer.degen.tips",
   },
 };
 export const supportedNetworks = Object.values(ChainIdForChainName).map(
