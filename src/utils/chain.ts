@@ -73,7 +73,7 @@ export const ChainIdForChainName: ChainDetail = {
   666666666: {
     AlchemyChainNetwork: "",
     CovalentChainName: "",
-    shortName: "degen",
+    shortName: "degen-chain",
     explorer: "https://explorer.degen.tips",
   },
 };

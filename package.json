@@ -9,7 +9,7 @@
     "typescript": "^5.0.0"
   },
   "description": "SDK for Patch Wallet",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "./dist/src/index.js",
   "module": "./dist/src/index.js",
   "exports": {

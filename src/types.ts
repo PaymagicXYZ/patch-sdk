@@ -11,7 +11,7 @@ export const supportedChains = [
   "gno",
   "bnb",
   "polygonamoy",
-  "degen",
+  "degen-chain",
 ] as const;
 export type Chain = (typeof supportedChains)[number];
 
